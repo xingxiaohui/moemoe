@@ -8,11 +8,12 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(32))
     head_url = db.Column(db.String(80))
+    images = db.relationship('Image', backref='user', lazy='dynamic')
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, head_url):
         self.username = username
         self.password = password
-        self.head_url = 'head_url'
+        self.head_url = head_url
 
     def __repr__(self):
         return '<User %d %s>' % (self.id, self.username)

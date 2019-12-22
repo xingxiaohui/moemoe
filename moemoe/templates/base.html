@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="Keywords" content="">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% block css %}{% endblock %}">
+</head>
+<body>
+    <div class="container">
+        <section>
+            <header class="header">
+                <div class="header-cont">
+                    <a class="logo" href="/">logo</a>
+                    <div class="web-menu">
+                        {% if 1 %}
+                        <a class="profile-ico" href="/profile/current_user.id">current_user.username</a>
+                        {% else %}
+                        <a class="profile-ico" href="/regloginpage/">登陆/注册</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+
+            {% block content %}{% endblock %}
+
+            <footer class="footer">
+                <div class="footer-cont" style="max-width:935px;">
+                    <nav>
+                        <ul class="footer-items">
+                            <li>
+                                <a href="/about/us/">关于我们</a>
+                            </li>
+                            <li>
+                                <a href="https://help.nowcoder.com/">支持</a>
+                            </li>
+                            <li>
+                                <a href="http://blog.nowcoder.com/">博客</a>
+                            </li>
+                            <li>
+                                <a href="/press/">新闻中心</a>
+                            </li>
+                            <li>
+                                <a href="/legal/privacy/">隐私</a>
+                            </li>
+                            <li>
+                                <a href="/legal/terms/">条款</a>
+                            </li>
+
+                        </ul>
+                    </nav>
+                    <span class="copy-right">© 2019 moemoe</span>
+                </div>
+            </footer>
+        </section>
+    </div>
+</body>
+{% block js %}{% endblock %}
+</html>
+
