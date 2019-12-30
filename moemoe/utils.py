@@ -1,6 +1,7 @@
 """
 工具模块
 """
+import os
 import random
 import string
 import smtplib
@@ -31,6 +32,7 @@ def draw_lines(draw, num, width, height):
 
 
 def get_verify_code():
+    root_path = os.path.abspath(os.path.dirname(__file__)).split('moemoe')[0]
     # 生成验证码图形
     code = gene_text()
     # 图片大小120×50
@@ -38,7 +40,7 @@ def get_verify_code():
     # 新图片对象
     im = Image.new('RGB', (width, height), 'white')
     # 字体
-    font = ImageFont.truetype('static/fonts/Arial.ttf', 40)
+    font = ImageFont.truetype(root_path+'moemoe\\moemoe\\static\\fonts\\Arial.ttf', 40)
     # draw对象
     draw = ImageDraw.Draw(im)
     # 绘制字符串
@@ -87,4 +89,5 @@ def send_email():
 
 
 if __name__ == '__main__':
-    send_email()
+    # send_email()
+    pass

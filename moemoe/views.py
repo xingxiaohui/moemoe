@@ -1,10 +1,13 @@
 import random, hashlib
-from flask import render_template, redirect, request, flash, get_flashed_messages
+from flask import render_template, redirect, request, flash, get_flashed_messages, make_response, session
 from sqlalchemy import and_
 
 from moemoe import app, db
 from moemoe.models import Image, User, Comment
 from flask_login import login_user, logout_user, current_user, login_required
+from io import BytesIO
+
+from moemoe.utils import get_verify_code
 
 
 @app.route('/')
@@ -76,6 +79,10 @@ def reg():
 def login():
     username = request.values.get('username').strip()
     password = request.values.get('password').strip()
+    verify = request.values.get('verify').strip()
+
+    if session.get('image').lower() != verify:
+        return redirect_with_msg('/login.html', u'验证码错误！', category='login')
     # 来源页
     next = request.values.get('next').strip()
 
@@ -99,6 +106,21 @@ def login():
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/verify/code')
+def get_code():
+    img, code = get_verify_code()
+    # 图片以二进制形式写入
+    buf = BytesIO()
+    img.save(buf, 'jpeg')
+    buf_str = buf.getvalue()
+    # 把buf_str作为response返回前端，并设置首部字段
+    response = make_response(buf_str)
+    response.headers['Content-Type'] = 'image/gif'
+    # 将验证码字符串储存在session中
+    session['image'] = code
+    return response
 
 
 # 随机生成用户头像地址
