@@ -1,6 +1,8 @@
+import os
 import random, hashlib
-from flask import render_template, redirect, request, flash, get_flashed_messages, make_response, session
+from flask import render_template, redirect, request, flash, get_flashed_messages, make_response, session, jsonify
 from sqlalchemy import and_
+from werkzeug.utils import secure_filename
 
 from moemoe import app, db
 from moemoe.models import Image, User, Comment
@@ -8,6 +10,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 from io import BytesIO
 
 from moemoe.utils import get_verify_code
+
+# 设置允许的文件格式
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG', 'bmp'])
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 @app.route('/')
@@ -121,6 +130,26 @@ def get_code():
     # 将验证码字符串储存在session中
     session['image'] = code
     return response
+
+
+@app.route('/upload/', methods={'post'})
+def upload():
+    f = request.files['file']
+    if not (f and allowed_file(f.filename)):
+        return jsonify({"error": 1001, "msg": '请选择正确的文件！'})
+
+    user_input = request.form.get("name")
+    # 当前文件所在路径
+    base_path = os.path.dirname(__file__)
+    # 注意：没有的文件夹一定要先创建，不然会提示没有该路径
+    upload_path = os.path.join(base_path, 'static/images/res', secure_filename(f.filename))
+    f.save(upload_path)
+    url = '/static/images/res/'+secure_filename(f.filename)
+    # 持久化到本地数据库
+    img = Image(url, current_user.id)
+    db.session.add(img)
+    db.session.commit()
+    return redirect_with_msg('/profile/'+str(current_user.id), u'上传成功', category='upload')
 
 
 # 随机生成用户头像地址
