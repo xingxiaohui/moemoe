@@ -1,6 +1,6 @@
 import os
 import random, hashlib
-from flask import render_template, redirect, request, flash, get_flashed_messages, make_response, session, jsonify
+from flask import render_template, redirect, request, flash, get_flashed_messages, make_response, session, jsonify, json
 from sqlalchemy import and_
 from werkzeug.utils import secure_filename
 
@@ -150,6 +150,19 @@ def upload():
     db.session.add(img)
     db.session.commit()
     return redirect_with_msg('/profile/'+str(current_user.id), u'上传成功', category='upload')
+
+
+@app.route('/comment/add/', methods={'post'})
+def add_comment():
+    image_id = int(request.values['image_id'])
+    content = request.values['content']
+    comment = Comment(current_user.id, image_id, content)
+    db.session.add(comment)
+    db.session.commit()
+    return json.dumps({"code": 0, "id": comment.id,
+                       "content": comment.content,
+                       "username": comment.user.username,
+                       "user_id": comment.user_id})
 
 
 # 随机生成用户头像地址

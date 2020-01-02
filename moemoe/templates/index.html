@@ -29,7 +29,7 @@
                 <span> 次播放</span>
             </section>
             -->
-            <ul class="discuss-list">
+            <ul class="discuss-list" id="js-discuss-list{{image.id}}">
                 <!--
                 <li>
                     <h1>
@@ -47,8 +47,8 @@
                 </li>
                 -->
                 <li class="more-discuss">
-                    <a>
-                        <span>全部 </span><span class="">{{image.comments|length}}</span>
+                    <a href="/image/{{image.id}}">
+                        <span>全部 </span><span id="commentNum{{image.id}}">{{image.comments|length}}</span>
                         <span> 条评论</span></a>
                 </li>
                 {% for comment in image.comments %}
@@ -68,12 +68,14 @@
             <section class="discuss-edit">
                 <a class="icon-heart"></a>
                 <form>
-                    <input placeholder="添加评论..." type="text">
+                    <input placeholder="添加评论..." type="text" id="comment{{image.id}}">
                 </form>
-                <button class="more-info">更多选项</button>
+                <button class="more-info" onclick="addComment({{image.id}},{{image.comments|length}})">评论</button>
             </section>
         </div>
     </article>
     {% endfor %}
 </div>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
 {% endblock%}

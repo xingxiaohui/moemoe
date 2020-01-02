@@ -25,7 +25,7 @@ $(function () {
             }
             bSubmit = true;
             $.ajax({
-                url: '/addcomment/',
+                url: '/comment/add/',
                 type: 'post',
                 dataType: 'json',
                 data: {image_id: sImageId, content: sCmt}
@@ -38,7 +38,7 @@ $(function () {
                 // 渲染新的评论
                 var sHtml = [
                     '<li>',
-                        '<a class="_4zhc5 _iqaka" title="', that.encode(oResult.username), '" href="/profile/', oResult.user_id, '">', that.encode(oResult.username), '</a> ',
+                        '<a class="_4zhc5 _iqaka" title="', that.encode(oResult.username), '" href="/profile/', oResult.user_id, '">', that.encode(oResult.username), ':</a> ',
                         '<span><span>', that.encode(sCmt), '</span></span>',
                     '</li>'].join('');
                 oListDv.prepend(sHtml);
